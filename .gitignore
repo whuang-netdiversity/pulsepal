@@ -1,0 +1,42 @@
+# Node
+node_modules/
+package-lock.json
+
+# Build outputs
+resources/
+static/
+js/*
+!js/.gitkeep
+
+css/*
+!css/.gitkeep
+
+www/
+android/
+ios/
+
+# Thorium-generated
+forms/
+/pages/
+fonts/
+img/
+icons/
+splashscreens/
+font-awesome/
+index.html
+manifest.webmanifest
+offline.html
+service-worker.js
+version.json
+browserconfig.xml
+.htaccess
+.index.capacitor
+favicon.ico
+
+# IDE/system
+.wrangler
+.vscode/
+.DS_Store
+
+# Logs and debug
+*.log

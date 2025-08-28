@@ -1,0 +1,68 @@
+/* ===== Pulse Pal — Calc Sheet (tight layout) ===== */
+
+/* Make the sheet content a tight, vertical stack */
+#pp-calc-sheet .sheet-modal-inner {
+  padding: 0;                               /* remove extra top/bottom padding */
+  display: flex;
+  flex-direction: column;
+  max-height: calc(70vh - var(--f7-toolbar-height, 44px));
+  overflow: hidden;
+}
+
+/* Kill Framework7 block margins inside the sheet */
+#pp-calc-sheet .block {
+  margin: 0;                                /* remove top & bottom margins */
+  padding: 0;                               /* we’ll pad children precisely */
+}
+
+/* Display row — sits flush under the toolbar */
+#pp-calc-sheet .ppkp-display {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  /* small, controlled padding; no top gap above this row */
+  padding: 8px 12px 6px 12px;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+/* Keypad container fills remaining space without extra gaps */
+#pp-calc-sheet .ppkp-keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 44px;                     /* compact key height */
+  gap: 6px;                                 /* tight inter-key spacing */
+  padding: 0 12px;                          /* no extra top/bottom padding */
+  margin-bottom: env(safe-area-inset-bottom, 0px);  /* only safe-area at bottom */
+}
+
+/* Uniform buttons */
+#pp-calc-sheet .ppkp-keypad .button {
+  border-radius: 12px;
+  height: 44px;
+  line-height: 44px;
+  padding: 0;
+}
+
+/* Apply spans 2 middle columns (row 4, col 2–3 in your markup) */
+#pp-calc-sheet .ppk-apply {
+  grid-column: 2 / span 2;
+}
+
+/* Active field outline */
+#pp-calc-sheet .ppkp-field.button-active {
+  box-shadow: inset 0 0 0 2px var(--f7-theme-color, #2196f3);
+}
+
+/* Optional: keep whole sheet from growing too tall on small screens */
+#pp-calc-sheet {
+  height: auto;
+  max-height: 70vh;
+}
+
+/* Title padding so it doesn't touch edge */
+#ppkp-title {
+  padding-left: 16px;   /* adjust as needed */
+  padding-right: 16px;
+}
