@@ -1,111 +1,111 @@
 @font-face {
-  font-family: 'Digital7';
-  src: url('../fonts/digital-7-mono-italic.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'Digital7';
+    src: url('../fonts/digital-7-mono-italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* ---------- Tunables ---------- */
 :root {
-  --pp-screen-pad-x: 12px;   /* left/right padding */
-  --pp-screen-pad-y: 10px;   /* bottom padding only */
-  --pp-label-col: 120px;     /* width of label column */
-  --pp-gap: 24px;            /* gutter between label and digits */
+    --pp-screen-pad-x: 12px;   /* left/right padding */
+    --pp-screen-pad-y: 10px;   /* bottom padding only */
+    --pp-label-col: 120px;     /* width of label column */
+    --pp-gap: 24px;            /* gutter between label and digits */
 }
 
 /* ===== Pulse Pal — Card with Bezel ===== */
 
 .pp-bezel-card .card-content {
-  padding: 14px 14px 12px;
+    padding: 14px 14px 12px;
 }
 
 /* Outer bezel */
 .pp-bezel {
-  border-radius: 18px;
-  background: linear-gradient(145deg, #1a1f24, #0e1215);
-  border: 1px solid rgba(255,255,255,.06);
-  padding: 10px; /* bezel thickness */
-  box-shadow: inset 0 2px 8px rgba(0,0,0,.45), 0 8px 24px rgba(0,0,0,.25);
+    border-radius: 18px;
+    background: linear-gradient(145deg, #1a1f24, #0e1215);
+    border: 1px solid rgba(255,255,255,.06);
+    padding: 10px; /* bezel thickness */
+    box-shadow: inset 0 2px 8px rgba(0,0,0,.45), 0 8px 24px rgba(0,0,0,.25);
 }
 
 /* Inner screen */
 .pp-screen {
-  border-radius: 12px;
-  background: #0b0f12;
-  border: 1px solid rgba(255,255,255,.05);
+    border-radius: 12px;
+    background: #0b0f12;
+    border: 1px solid rgba(255,255,255,.05);
 
-  /* top padding removed so digits hug the top */
-  padding: 0 var(--pp-screen-pad-x) var(--pp-screen-pad-y);
+    /* top padding removed so digits hug the top */
+    padding: 0 var(--pp-screen-pad-x) var(--pp-screen-pad-y);
 }
 
 /* Rows: 2-column grid [label | value] */
 .pp-screen .pp-row {
-  display: grid !important;
-  grid-template-columns: var(--pp-label-col) 1fr;
-  column-gap: var(--pp-gap);
-  align-items: start;
-  margin: 0;
-  padding: 0;
-  border-bottom: 1px dashed rgba(255,255,255,.06);
+    display: grid !important;
+    grid-template-columns: var(--pp-label-col) 1fr;
+    column-gap: var(--pp-gap);
+    align-items: start;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px dashed rgba(255,255,255,.06);
 }
 .pp-screen .pp-row:last-child { border-bottom: 0; }
 
 /* Label stack */
 .pp-label {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 4px;
-  margin: 8px 0 0 0;          /* 👈 add top gap of 8px */
-  padding: 0;
-  line-height: 1;
-  align-self: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+    margin: 8px 0 0 0;          /* 👈 add top gap of 8px */
+    padding: 0;
+    line-height: 1;
+    align-self: start;
 }
 .pp-label-main {
-  font-weight: 800;
-  font-size: 1.8rem;     /* big SYS/DIA/PULSE */
-  text-transform: uppercase;
-  color: #e7f0f3;
-  line-height: 1.1;
-  letter-spacing: 0.02em;
+    font-weight: 800;
+    font-size: 1.8rem;     /* big SYS/DIA/PULSE */
+    text-transform: uppercase;
+    color: #e7f0f3;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
 }
 .pp-label-unit {
-  font-size: 1.3rem;     /* bigger units mmHg/bpm */
-  color: #9fb0b7;
-  opacity: .95;
-  line-height: 1;
+    font-size: 1.3rem;     /* bigger units mmHg/bpm */
+    color: #9fb0b7;
+    opacity: .95;
+    line-height: 1;
 }
 
 /* Digital readout */
 .pp-value {
-  font-family: 'Digital7', 'Digital7Mono', monospace;
-  font-size: 10rem;       /* elder-friendly digits */
-  line-height: 0.86;      /* trims Digital7 headroom */
-  margin: 0;
-  padding: 0;
+    font-family: 'Digital7', 'Digital7Mono', monospace;
+    font-size: 10rem;       /* elder-friendly digits */
+    line-height: 0.86;      /* trims Digital7 headroom */
+    margin: 0;
+    padding: 0;
 
-  justify-self: end;      /* flush to right bezel edge */
-  text-align: right;
-  white-space: nowrap;
-  overflow: hidden;
+    justify-self: end;      /* flush to right bezel edge */
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
 
-  color: #25ff5a;
-  text-shadow:
-    0 0 3px rgba(37,255,90,.9),
-    0 0 12px rgba(37,255,90,.35);
+    color: #25ff5a;
+    text-shadow:
+      0 0 3px rgba(37,255,90,.9),
+      0 0 12px rgba(37,255,90,.35);
 }
 
 /* Actions under bezel */
 .pp-actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
 }
 .pp-btn {
-  border-radius: 12px;
-  font-weight: 600;
+    border-radius: 12px;
+    font-weight: 600;
 }
 .pp-btn.button-fill { background: #1d2a31; }
 .pp-btn-secondary { background: #0f161b; border: 1px solid rgba(255,255,255,.06); }
@@ -117,14 +117,34 @@
 
 /* -------- Responsive guardrails -------- */
 @media (max-width: 380px) {
-  :root { --pp-label-col: 100px; --pp-gap: 18px; }
-  .pp-label-main { font-size: 1.5rem; }
-  .pp-label-unit { font-size: 1.1rem; }
-  .pp-value { font-size: 8.5rem; }
+    :root { --pp-label-col: 100px; --pp-gap: 18px; }
+    .pp-label-main { font-size: 1.5rem; }
+    .pp-label-unit { font-size: 1.1rem; }
+    .pp-value { font-size: 8.5rem; }
 }
 @media (max-width: 340px) {
-  :root { --pp-label-col: 90px; --pp-gap: 14px; }
-  .pp-label-main { font-size: 1.4rem; }
-  .pp-label-unit { font-size: 1rem; }
-  .pp-value { font-size: 7.5rem; }
+    :root { --pp-label-col: 90px; --pp-gap: 14px; }
+    .pp-label-main { font-size: 1.4rem; }
+    .pp-label-unit { font-size: 1rem; }
+    .pp-value { font-size: 7.5rem; }
+}
+
+.pp-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    border-radius: 4px;      /* rounded square */
+    vertical-align: -2px;    /* aligns nicer with text on mobile */
+}
+
+.pp-you-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #2563eb; /* blue */
+    color: #fff;
+    line-height: 1;
 }
