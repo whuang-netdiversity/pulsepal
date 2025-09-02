@@ -237,8 +237,8 @@ class PPCard extends HTMLElement {
 
                 <!-- User Actions (capture reading) -->
                 <div class="pp-capture">
-                    <a id="btn-capture-reading" class="button button-fill pp-btn">
-                        <i class="f7-icons">camera_fill</i> Scan BP From Camera
+                    <a id="btn-capture-reading" class="button button-fill button-large pp-btn">
+                        <i class="icon f7-icons">mic_fill</i>Speak BP Reading
                     </a>
                     <!-- Web fallback (desktop / PWA without Camera plugin) -->
                     <input id="input-bp-photo" type="file" accept="image/*" capture="environment" hidden>
@@ -300,8 +300,8 @@ class PPCard extends HTMLElement {
 
                 <!-- User Actions (store readings) -->
                 <div class="pp-actions">
-                    <a id="btn-add-reading" class="button button-fill pp-btn">Add Reading</a>
-                    <a id="btn-view-reading" class="button pp-btn pp-btn-secondary">View Readings</a>
+                    <a id="btn-add-reading" class="button button-fill button-large pp-btn">Add Reading</a>
+                    <a id="btn-view-reading" class="button button-large pp-btn pp-btn-secondary">View Readings</a>
                 </div>
 
                 </div>

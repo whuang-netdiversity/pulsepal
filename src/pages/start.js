@@ -1,6 +1,4 @@
 // src/pages/start.js
-import Tesseract from 'tesseract.js';
-
 import { readBP, updateBP } from '@/app/ui';
 import { mountCalcSheet, openCalc } from '@/services/calc-sheet';
 import { pp_detail } from '@/pages/pp_detail';
@@ -101,17 +99,6 @@ $(document).on('click', start.bp_ecg_monitor, (e) => {
 $(document).on('click', start.bp_scan_input, async (e) => {
     e.preventDefault();
 
-    const scan = $('<input type="file" accept="image/*" capture="environment">');
-    scan.css({ position:'fixed', top:0, left:0, opacity:'0.001', width:'1px', height:'1px', zIndex:9999 });
-    $('body').append(scan);
-
-    $(scan).on('change', (ev) => {
-        const f = ev.target.files?.[0];
-        if (f) console.log('Selected file:', f.name);
-        scan.remove();
-    });
-
-    if (scan[0].showPicker) scan[0].showPicker(); else scan[0].click();
 
 
     // Your debug confirms click fired:
