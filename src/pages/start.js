@@ -1,9 +1,12 @@
 // src/pages/start.js
+import { logger } from '@/app/log';
 import { isCapacitor } from '@/services/capacitor';
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
 import { readBP, updateBP } from '@/app/ui';
 import { mountCalcSheet, openCalc } from '@/services/calc-sheet';
 import { pp_detail } from '@/pages/pp_detail';
+import { storeBP } from '@/app/bp';
+import { pp_history } from '@/pages/pp_history';
 
 export const start = {
     key: 'index-8723',
@@ -98,7 +101,6 @@ $(document).on('click', start.bp_ecg_monitor, (e) => {
     app.emit('routePage', { key: pp_detail.key, params: ecg });
 });
 
-// Speak → live transcript in a Framework7 Sheet → Stop → alert what was heard
 // Speak → live transcript in an F7 Sheet → Stop → parse → updateBP(sys, dia, pulse)
 $(document).on('click', start.bp_scan_input, async (e) => {
     e.preventDefault();
@@ -354,14 +356,14 @@ $(document).on('click', start.bp_scan_input, async (e) => {
 $(document).on('click', start.bp_add_input, (e) => {
     e.preventDefault();
 
-    alert('clicked');
-    thoriumapi.logEvent(1, 'Direct add fired!');
+    const ecg = readBP();
+    storeBP(ecg);
+
+    app.dialog.alert('The BP reading has been saved.');
 });
 
 $(document).on('click', start.bp_view_input, (e) => {
     e.preventDefault();
 
-    alert('clicked');
-    thoriumapi.logEvent(1, 'Direct view fired!');
-
+    app.emit('routePage', { key: pp_history.key });
 });

@@ -33,135 +33,150 @@ $(document).on('page:init', '.page[data-name="pp_history"]', ({ detail: page }) 
 
 $(document).on('click', pp_history.pp_share, async (e) => {
     e.preventDefault();
-    logger.success('clicked');
 
-    try {
-        // 1) Prompt for date range (inline)
-        const range = await new Promise((resolve) => {
-            const html = `
-                <div class="list no-hairlines no-hairlines-between">
-                    <ul>
-                        <li class="item-content item-input">
-                            <div class="item-inner">
-                                <div class="item-title item-label">Start date</div>
-                                <div class="item-input-wrap">
-                                    <input id="pp-start" type="date" />
-                                </div>
-                            </div>
-                        </li>
-                        <li class="item-content item-input">
-                            <div class="item-inner">
-                                <div class="item-title item-label">End date</div>
-                                <div class="item-input-wrap">
-                                    <input id="pp-end" type="date" />
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            `;
-            app.dialog.create({
-                title: 'Select Date Range',
-                content: html,
-                buttons: [
-                    { text: 'Cancel', close: true, onClick: () => resolve(null) },
-                    { text: 'OK', bold: true, close: true, onClick: () => {
+    const html = `
+        <div class="list no-hairlines no-hairlines-between">
+            <ul>
+                <li class="item-content item-input">
+                    <div class="item-inner">
+                        <div class="item-title item-label">Start</div>
+                        <div class="item-input-wrap"><input id="pp-start" type="date" /></div>
+                    </div>
+                </li>
+                <li class="item-content item-input">
+                    <div class="item-inner">
+                        <div class="item-title item-label">End</div>
+                        <div class="item-input-wrap"><input id="pp-end" type="date" /></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    `;
+
+    app.dialog.create({
+        title: 'Date Range',
+        content: html,
+        buttons: [
+            {
+                text: 'Cancel',
+                close: true
+            },
+            {
+                text: 'OK',
+                bold: true,
+                close: true,
+                onClick: async () => {
+                    try {
                         const s = $('#pp-start').val();
-                        const e = $('#pp-end').val();
-                        resolve({ start: s || null, end: e || null });
-                    } }
-                ]
-            }).open();
-        });
-        if (!range) return;
+                        const e2 = $('#pp-end').val();
 
-        // 2) Normalize dates (inclusive); mirror single-sided input to same day
-        const toStart = d => { if (!d) return null; const x = new Date(d); x.setHours(0,0,0,0); return x; };
-        const toEnd   = d => { if (!d) return null; const x = new Date(d); x.setHours(23,59,59,999); return x; };
-        let startAt = range.start ? toStart(range.start) : null;
-        let endAt   = range.end   ? toEnd(range.end)     : null;
-        if (!startAt && endAt) startAt = toStart(endAt);
-        if (!endAt && startAt) endAt   = toEnd(startAt);
-        if (startAt && endAt && startAt > endAt) {
-            logger.warn('Start date must be before end date');
+                        const toStart = s => {
+                            if (!s) return null;
+                            const [y, m, d] = s.split('-').map(n => parseInt(n, 10));
+                            return new Date(y, m - 1, d, 0, 0, 0, 0); // local 00:00
+                        };
+
+                        const toEnd = s => {
+                            if (!s) return null;
+                            const [y, m, d] = s.split('-').map(n => parseInt(n, 10));
+                            return new Date(y, m - 1, d, 23, 59, 59, 999); // local 23:59:59.999
+                        };                        let startAt = s ? toStart(s) : null;
+
+                        let endAt   = e2 ? toEnd(e2) : null;
+                        if (!startAt && endAt) startAt = toStart(e2);
+                        if (!endAt && startAt) endAt   = toEnd(s);
+                        if (startAt && endAt && startAt > endAt) { alert('start must be before end'); return; }
+
+                        const readings = (loadBP() || [])
+                            .filter(r => r?.date && r?.ecg)
+                            .filter(r => {
+                                const d = new Date(r.date);
+                                if (startAt && d < startAt) return false;
+                                if (endAt && d > endAt) return false;
+                                return true;
+                            });
+
+                        if (!readings.length) { alert('no readings in range'); return; }
+
+                        const E = (v) => {
+                            const t = String(v ?? '');
+                            if (/[",\r\n]/.test(t)) {
+                                return `"${t.replace(/"/g, '""')}"`;
+                            }
+                            return t;
+                        };
+
+                        const lines = [['date','sys','dia','pulse'].map(E).join(',')];
+                        readings.forEach(r => {
+                            const { sys, dia, pulse } = r.ecg;
+                            lines.push([r.date, sys, dia, pulse].map(E).join(','));
+                        });
+                        const csv = '\uFEFF' + lines.join('\r\n');
+                        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+
+                        const fmt = d => d ? d.toISOString().slice(0,10) : 'all';
+                        const filename = `pulsepal-history-${fmt(startAt)}_${fmt(endAt)}.csv`;
+                        const file = new File([blob], filename, { type: 'text/csv' });
+
+                        const title = 'pulse pal — bp history';
+                        const text  = `${title} (${fmt(startAt)} to ${fmt(endAt)})`;
+
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            await navigator.share({ title, text, files: [file] });
+                            return;
+                        }
+
+                        if (window.isSecureContext && navigator.share) {
+                            await navigator.share({ title, text });
+                            return;
+                        }
+
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = filename;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    }
+                    catch (err) {
+                        if (err?.name !== 'AbortError') logger.warn('share failed:', err);         
+                    }
+                }
+            }
+        ]
+    }).open();
+
+/*    
+    try {
+        if (!navigator.share) {
+            alert('navigator.share not supported (need HTTPS or newer iOS).');
             return;
         }
 
-        // 3) Build CSV (RFC 4180 escaping + UTF-8 BOM + CRLF)
-        const E = v => {
-            const s = String(v ?? '');
-            return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
-        };
-        const fmtDate = d => d ? d.toISOString().slice(0,10) : 'all';
-        const filename = `pulsepal-history-${fmtDate(startAt)}_${fmtDate(endAt)}.csv`;
+        // try file share first (iOS 16+/modern browsers)
+        const blob = new Blob(['Hello from Pulse Pal 👋'], { type: 'text/plain' });
+        const file = new File([blob], 'webshare-test.txt', { type: 'text/plain' });
 
-        const lines = [];
-        lines.push(['date','sys','dia','pulse'].map(E).join(','));
-
-        (loadBP() || [])
-            .filter(r => r?.date && r?.ecg)
-            .filter(r => {
-                const d = new Date(r.date);
-                if (startAt && d < startAt) return false;
-                if (endAt && d > endAt) return false;
-                return true;
-            })
-            .forEach(r => {
-                const { sys, dia, pulse } = r.ecg;
-                lines.push([r.date, sys, dia, pulse].map(E).join(','));
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+                title: 'Web Share Test',
+                text: 'Sharing a tiny file via Web Share.',
+                files: [file]
             });
-
-        if (lines.length === 1) {
-            logger.info('No readings in that range');
             return;
         }
 
-        const csv = '\uFEFF' + lines.join('\r\n');
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
-
-        // 4) Try system share SHEET with FILE (preferred)
-        const file = new File([blob], filename, { type: 'text/csv' });
-        const title = 'Pulse Pal — BP History';
-        const textSummary = `${title} (${fmtDate(startAt)} to ${fmtDate(endAt)})`;
-
-        if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
-            try {
-                await navigator.share({ title, text: textSummary, files: [file] });
-                logger.success('Shared via system share sheet.');
-                return;
-            }
-            catch (err) {
-                // If user cancels share, just exit silently
-                if (err && err.name === 'AbortError') return;
-                logger.warn('File share failed, attempting text share…', err);
-            }
-        }
-
-        // 5) Fallback: text-only share (no file) if available
-        if (navigator.share) {
-            try {
-                await navigator.share({ title, text: textSummary });
-                logger.success('Shared summary text via system share sheet.');
-                return;
-            }
-            catch (err) {
-                if (err && err.name === 'AbortError') return;
-                logger.warn('Text share failed, falling back to download…', err);
-            }
-        }
-
-        // 6) Last resort: download the CSV
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
-        logger.success(`Downloaded ${filename}`);
+        // fallback: text-only share
+        await navigator.share({
+            title: 'Web Share Test',
+            text: 'Web Share is working (text-only).'
+        });
     }
     catch (err) {
-        logger.error('Share/export failed', err);
+        // user cancel is normal; ignore
+        if (err?.name !== 'AbortError') console.warn('Web Share error:', err);
     }
+*/
 });
 
 app.on(`lineChange[#${pp_history.prop.repeater}]`, (event, repeater, rowindex, item) => {

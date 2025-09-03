@@ -2,6 +2,7 @@
 import { logger } from '@/app/log';
 import { start } from '@/pages/start';
 import { classifyBP, BP_COLORS, uiForCategory, BP_MODE } from '@/app/bp';
+import { loadBP } from '@/app/bp';
 
 /**
  * Function to update contents in a repeater
@@ -102,7 +103,7 @@ export function updateBP(sys, dia, pulse, target = start.bp_id) {
 }
 
 /**
- * Function to update classification content
+ * Function to enrich classification content
  * @param {*} repeater
  * @param {*} reading 
  * @returns 
@@ -214,4 +215,38 @@ export function updateHealthBadgeAndRiskFrom(ecg) {
         .attr('aria-label', `Health classification: ${badgeText}`);
 
     if ($risk.length) $risk.text(risk);
+}
+
+/**
+ * History content enrichment
+ * @returns 
+ */
+export function updateHistory() {
+    const rows = (loadBP() || [])
+        .filter(r => r?.date && r?.ecg);
+
+    // oldest → newest for trend computation
+    rows.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let prevClass = null;
+    const decoratedAsc = rows.map(r => {
+        const curr = Number(r.class);
+        let trend = '⚪'; // neutral by default
+
+        if (Number.isFinite(curr) && Number.isFinite(prevClass)) {
+            if (curr > prevClass) trend = '📈';
+            else if (curr < prevClass) trend = '📉';
+            else trend = '➖';
+        }
+
+        if (Number.isFinite(curr)) prevClass = curr;
+
+        return {
+            date: r.date,
+            disp: `${r.ecg.sys}/${r.ecg.dia} • ${r.ecg.pulse} bpm ${trend}`
+        };
+    });
+
+    // newest → oldest for display
+    return decoratedAsc.reverse();
 }
