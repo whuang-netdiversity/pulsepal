@@ -8,7 +8,8 @@
         "clean": "rm -rf www",
         "build:dev": "npm run link:dev && webpack --mode development",
         "build:prd": "npm run link:prd && webpack --mode production",
-        "build:mobile": "npm run build:prd && npm run copy:post-build -- mobile",
+        "build:mobile:dev": "npm run build:dev && npm run copy:post-build -- mobile",
+        "build:mobile:prd": "npm run build:prd && npm run copy:post-build -- mobile",
         "lint": "eslint src/**/*.js",
         "link:dev": "cd js/json && ln -sf config.dev.json config.json && cd -",
         "link:prd": "cd js/json && ln -sf config.prd.json config.json && cd -",
@@ -20,11 +21,13 @@
         "cap:ios": "npx cap add ios",
         "cap:sync": "npx cap sync",
         "cap:assets": "npx @capacitor/assets generate",
-        "cap:build_ios": "npm run build:mobile && npm run copy:capacitor && npm run inject:capacitor && npm run cap:assets && npm run cap:sync -- ios",
-        "cap:build_android": "npm run build:mobile && npm run copy:capacitor && npm run inject:capacitor && npm run cap:assets && npm run cap:sync -- android",
+        "cap:build_ios:dev": "npm run build:mobile:dev && npm run copy:capacitor && npm run inject:capacitor && npm run cap:assets && npm run cap:sync -- ios",
+        "cap:build_ios:dev:prd": "npm run build:mobil:prd && npm run copy:capacitor && npm run inject:capacitor && npm run cap:assets && npm run cap:sync -- ios",
+        "cap:build_android:dev": "npm run build:mobile:dev && npm run copy:capacitor && npm run inject:capacitor && npm run cap:assets && npm run cap:sync -- android",
+        "cap:build_android:prd": "npm run build:mobile:prd && npm run copy:capacitor && npm run inject:capacitor && npm run cap:assets && npm run cap:sync -- android",
         "cap:open_ios": "npx cap open ios",
         "cap:open_android": "npx cap open android",
-        "release:android": "npm run cap:build_android && npm run inject:post-sync"
+        "release:android": "npm run cap:build_android:prd && npm run inject:post-sync"
     },
     "devDependencies": {
         "@capacitor/assets": "^3.0.5",
@@ -41,10 +44,10 @@
     },
     "dependencies": {
         "@capacitor-community/admob": "^7.0.3",
+        "@capacitor-community/speech-recognition": "^7.0.1",
         "@capacitor/android": "^7.4.2",
         "@capacitor/core": "^7.4.2",
         "@capacitor/ios": "^7.4.2",
-        "@revenuecat/purchases-capacitor": "^11.1.0",
-        "tesseract.js": "^6.0.1"
+        "@revenuecat/purchases-capacitor": "^11.1.0"
     }
 }
