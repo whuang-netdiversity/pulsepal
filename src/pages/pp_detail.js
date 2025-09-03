@@ -32,7 +32,7 @@ $(document).on('page:init', '.page[data-name="pp_detail"]', ({ detail: page }) =
     updateHealthBadgeAndRiskFrom(ecg);
 
     $(pp_detail.back_button).removeClass('back');
-    logger.info('pp detail page reloaded:', JSON.stringify(query));
+    logger.info('pp detail page loaded:', JSON.stringify(query));
 });
 
 /**
