@@ -1,5 +1,9 @@
 # Pulse Pal
 ## Features
-### Quickly add readings
-### Reverse chronological list of reading
+### Quickly use voice dictation to add readings
+### Reverse chronological history of readings
 ### Share results for health audits
+
+## Premium
+### Reminders
+### Charts
