@@ -1,7 +1,7 @@
 // src/app/ui.js
 import { logger } from '@/app/log';
 import { start } from '@/pages/start';
-import { classifyBP, BP_COLORS, uiForCategory, BP_MODE } from '@/app/bp';
+import { classifyBP, BP_COLORS, categoryBadge, BP_MODE } from '@/app/bp';
 import { loadBP } from '@/app/bp';
 
 /**
@@ -205,7 +205,7 @@ export function updateHealthBadgeAndRiskFrom(ecg) {
     if (!$badge.length) return;
 
     const category = classifyBP(ecg.sys, ecg.dia, BP_MODE.CONSUMER);
-    const { badgeText, badgeStyle, risk } = uiForCategory(category);
+    const { badgeText, badgeStyle, risk } = categoryBadge(category);
 
     $badge
         .removeAttr('class')

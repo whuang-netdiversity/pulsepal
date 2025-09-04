@@ -68,7 +68,7 @@ function levelFromClassification(classification) {
  * @param {*} category 
  * @returns 
  */
-export function uiForCategory(category) {
+export function categoryBadge(category) {
     switch (category) {
         case 'Normal':
             return { badgeText: 'Normal', badgeStyle: { background: BP_COLORS['Normal'], color: '#fff' },
