@@ -242,7 +242,7 @@ export function updateHistory() {
         if (Number.isFinite(curr)) prevClass = curr;
 
         return {
-            date: r.date,
+            date: r.date.replace(/ at /, '/').trim(),
             disp: `${r.ecg.sys}/${r.ecg.dia} • ${r.ecg.pulse} bpm ${trend}`
         };
     });
