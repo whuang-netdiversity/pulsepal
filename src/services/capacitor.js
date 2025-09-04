@@ -1,3 +1,4 @@
+// /src/services/capacitor.js
 import { Capacitor } from '@capacitor/core';
 
 /**
