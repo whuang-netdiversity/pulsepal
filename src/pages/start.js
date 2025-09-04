@@ -20,7 +20,6 @@ export const start = {
     bp_scan_input: '#btn-capture-reading',
     bp_add_input: '#btn-add-reading',
     bp_view_input: '#btn-view-reading',
-
 };
 
 $(document).on('page:init', '.page[data-name="index"]', ({ detail: page }) => {
@@ -120,8 +119,8 @@ $(document).on('click', start.bp_scan_input, async (e) => {
             perm?.permission === true;
 
         if (!granted) {
-            const req = await (SpeechRecognition.requestPermissions?.() ??
-                               SpeechRecognition.requestPermission());
+            const req = await (SpeechRecognition.requestPermissions?.());
+
             const ok =
                 req?.speechRecognition === 'granted' ||
                 req?.microphone === 'granted' ||
@@ -133,7 +132,7 @@ $(document).on('click', start.bp_scan_input, async (e) => {
         }
     }
     catch (err) {
-        console.error('Permission check failed:', err);
+        logger.error('Permission check failed:', err);
         app.dialog.alert('Permission check failed: ' + (err?.message || err));
         return;
     }
@@ -260,7 +259,7 @@ $(document).on('click', start.bp_scan_input, async (e) => {
     });
 
     const stateSub = await SpeechRecognition.addListener('listeningState', (d) => {
-        console.log('[speech] state:', d?.status);
+        logger.info('[speech] state:', d?.status);
     });
 
     const cleanup = async () => {
@@ -348,7 +347,7 @@ $(document).on('click', start.bp_scan_input, async (e) => {
     catch (err) {
         clearTimeout(timer);
         await cleanup();
-        console.error('Speech start failed:', err);
+        logger.error('Speech start failed:', err);
         app.dialog.alert('Speech start failed: ' + (err?.message || err));
     }
 });
