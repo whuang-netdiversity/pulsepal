@@ -300,8 +300,19 @@ class PPCard extends HTMLElement {
 
                 <!-- User Actions (store readings) -->
                 <div class="pp-actions">
-                    <a id="btn-add-reading" class="button button-fill button-large pp-btn">Add Reading</a>
-                    <a id="btn-view-reading" class="button button-large pp-btn pp-btn-secondary">View Readings</a>
+                    <a id="btn-add-reading" class="button button-fill button-large pp-btn">
+                        <i class="icon f7-icons">plus_circle_fill</i>Add Reading
+                    </a>
+                    <a id="btn-history" class="button button-large pp-btn pp-btn-secondary">
+                        <i class="icon f7-icons">doc_text_fill</i>History
+                        </a>
+                    <a id="btn-reminders" class="button button-large pp-btn pp-btn-secondary">
+                        <i class="icon f7-icons">bell_fill</i>Reminders
+                    </a>
+                    <a id="btn-trends" class="button button-large pp-btn pp-btn-secondary">
+                        <i class="icon f7-icons">chart_bar_fill</i>Trends
+                    </a>
+
                 </div>
 
                 </div>
