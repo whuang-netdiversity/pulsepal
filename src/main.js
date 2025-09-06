@@ -3,6 +3,7 @@ import '@/styles/calc-sheet.css';
 import '@/styles/components.css';
 import '@/styles/overrides.css';
 import '@/styles/pp-card.css';
+import '@/styles/pp-day.css';
 
 // JS IMPORTS HERE
 import { logger } from '@/app/log';
