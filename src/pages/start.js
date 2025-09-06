@@ -7,6 +7,7 @@ import { mountCalcSheet, openCalc } from '@/services/calc-sheet';
 import { pp_detail } from '@/pages/pp_detail';
 import { storeBP } from '@/app/bp';
 import { pp_history } from '@/pages/pp_history';
+import { pp_schedule } from '@/pages/pp_schedule';
 
 export const start = {
     key: 'index-8723',
@@ -19,7 +20,9 @@ export const start = {
     bp_ecg_monitor: '.pp-ecg-wrap.detail-touch',
     bp_scan_input: '#btn-capture-reading',
     bp_add_input: '#btn-add-reading',
-    bp_view_input: '#btn-view-reading',
+    bp_view_input: '#btn-history',
+    bp_reminders: '#btn-reminders',
+    bp_trends: '#btn-trends'
 };
 
 $(document).on('page:init', '.page[data-name="index"]', ({ detail: page }) => {
@@ -365,4 +368,16 @@ $(document).on('click', start.bp_view_input, (e) => {
     e.preventDefault();
 
     app.emit('routePage', { key: pp_history.key });
+});
+
+$(document).on('click', start.bp_reminders, (e) => {
+    e.preventDefault();
+
+    app.emit('routePage', { key: pp_schedule.key });
+});
+
+$(document).on('click', start.bp_trends, (e) => {
+    e.preventDefault();
+
+    logger.success('bp trends licked');
 });
