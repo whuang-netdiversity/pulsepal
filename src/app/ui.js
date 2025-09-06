@@ -3,7 +3,7 @@ import { logger } from '@/app/log';
 import { start } from '@/pages/start';
 import { classifyBP, BP_COLORS, categoryBadge, BP_MODE } from '@/app/bp';
 import { loadBP } from '@/app/bp';
-
+import { getSchedule } from '@/app/reminders';
 /**
  * Function to update contents in a repeater
  * @param {*} page 
@@ -249,4 +249,43 @@ export function updateHistory() {
 
     // newest → oldest for display
     return decoratedAsc.reverse();
+}
+
+export function updateSchedule() {
+    const rows = (getSchedule() || []);
+
+    const dayLabels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+
+    const formatTime12 = (hour, minute) => {
+        const h = ((Number(hour) + 11) % 12) + 1;   // 0–23 → 1–12
+        const m = String(minute).padStart(2, '0');
+        const ampm = Number(hour) < 12 ? 'AM' : 'PM';
+        return `${h}:${m} ${ampm}`;
+    };
+
+    // Sunday=0..Saturday=6, shift to Mon=0..Sun=6
+    const todayIdx = (() => {
+        const jsDay = new Date().getDay(); // 0=Sun..6=Sat
+        return jsDay === 0 ? 6 : jsDay - 1;
+    })();
+
+    return rows.map(r => {
+        const timeStr = formatTime12(r.hour, r.minute);
+        const time = `⏰ ${timeStr}`;
+
+        const day = (r.days || [])
+            .map((on, i) => {
+                if (!on) {
+                    return null;
+                }
+                if (i === todayIdx) {
+                    return `<span class="pp-day today">${dayLabels[i]}</span>`;
+                }
+                return `<span class="pp-day">${dayLabels[i]}</span>`;
+            })
+            .filter(Boolean)
+            .join(' ');
+
+        return { ...r, time, day };
+    });
 }
